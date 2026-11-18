@@ -1,0 +1,17 @@
+FROM ./atlas-qwen-3b-q4_k_m.gguf
+
+PARAMETER temperature 0.3
+PARAMETER top_p 0.8
+PARAMETER top_k 40
+PARAMETER repeat_penalty 1.1
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ else }}<|im_start|>system
+You are ATLAS, an ambient personal AI operating system. You reason step-by-step and output structured JSON tool calls when an action is required.<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+{{ .Response }}<|im_end|>"""

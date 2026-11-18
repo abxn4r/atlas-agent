@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ATLAS_Tool_Calling_Schemas",
+  "description": "Deterministic JSON Schemas for the 19 tools supported by ATLAS-3B",
+  "type": "object",
+  "tools": [
+    {
+      "name": "wake_pc",
+      "description": "Broadcasts a Wake-on-LAN magic packet to power on a target workstation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "mac_address": { "type": "string", "description": "Target Ethernet MAC address (e.g. 10-FF-E0-7E-7F-4E)" },
+          "broadcast_ip": { "type": "string", "default": "255.255.255.255" }
+        },
+        "required": ["mac_address"]
+      }
+    },
+    {
+      "name": "sleep_pc",
+      "description": "Triggers graceful ACPI S3 sleep state on the target workstation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "host": { "type": "string", "description": "Host IP or hostname" },
+          "force": { "type": "boolean", "default": false }
+        },
+        "required": ["host"]
+      }
+    },
+    {
+      "name": "spotify_dj",
+      "description": "Controls Spotify playback, tracks, search queries, playlists, and volume.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["play", "pause", "next", "previous", "search", "volume"] },
+          "query": { "type": "string", "description": "Track, artist, or playlist name" },
+          "volume_percent": { "type": "integer", "minimum": 0, "maximum": 100 }
+        },
+        "required": ["action"]
+      }
+    },
+    {
+      "name": "mute_pc_mic",
+      "description": "Instantly mutes the hardware/system microphone on the PC for privacy.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "unmute_pc_mic",
+      "description": "Restores PC microphone input.",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "pc_window_control",
+      "description": "Minimizes, maximizes, restores, or snaps active application windows on PC.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "window_title": { "type": "string" },
+          "action": { "type": "string", "enum": ["focus", "minimize", "maximize", "close"] }
+        },
+        "required": ["action"]
+      }
+    },
+    {
+      "name": "kill_process",
+      "description": "Gracefully terminates or force-kills a process by name or PID.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "process_name": { "type": "string" },
+          "pid": { "type": "integer" },
+          "force": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    {
+      "name": "capture_screen",
+      "description": "Captures a full or region screenshot of the active PC screen.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "monitor": { "type": "integer", "default": 1 },
+          "save_path": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "clipboard_teleport",
+      "description": "Copies text, URLs, or OCR snippets across devices directly into the PC clipboard.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": { "type": "string", "description": "Text to write to clipboard" },
+          "open_in_browser": { "type": "boolean", "default": false }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "snap_camera",
+      "description": "Triggers phone or connected IoT camera to snap a high-resolution photo for OCR or vision inspection.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "camera": { "type": "string", "enum": ["rear", "front", "macro"], "default": "rear" },
+          "ocr_enabled": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    {
+      "name": "save_memory",
+      "description": "Persists structured knowledge, preferences, or configuration facts into SQLite memory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "value": { "type": "string" },
+          "category": { "type": "string", "enum": ["network", "preferences", "credentials", "projects", "todos", "misc"] }
+        },
+        "required": ["key", "value", "category"]
+      }
+    },
+    {
+      "name": "query_memory",
+      "description": "Retrieves semantic facts, past context, or saved credentials from SQLite memory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "category": { "type": "string" }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "delete_memory",
+      "description": "Removes obsolete facts or records from SQLite memory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "check_status",
+      "description": "Checks health metrics (battery, thermals, CPU load, network latency, daemons).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "target": { "type": "string", "enum": ["edge_node", "workstation", "all"], "default": "all" }
+        }
+      }
+    },
+    {
+      "name": "firewall_filter",
+      "description": "Adds or removes firewall rules and blocks unauthorized IP addresses.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "ip_address": { "type": "string" },
+          "action": { "type": "string", "enum": ["block", "allow", "list"] }
+        },
+        "required": ["action"]
+      }
+    },
+    {
+      "name": "daily_recap",
+      "description": "Generates a comprehensive summary of system events, completed tasks, and telemetry.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "delegate_to_cloud",
+      "description": "Escalates compute-intensive jobs (heavy reasoning, large batch jobs) to an on-demand cloud GPU worker.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task_type": { "type": "string" },
+          "payload": { "type": "string" },
+          "max_duration_minutes": { "type": "integer", "default": 60 }
+        },
+        "required": ["task_type", "payload"]
+      }
+    },
+    {
+      "name": "call_custom_plugin",
+      "description": "Dispatches arguments to user-defined scripts located in the plugins directory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "plugin_name": { "type": "string" },
+          "params": { "type": "object" }
+        },
+        "required": ["plugin_name"]
+      }
+    },
+    {
+      "name": "none",
+      "description": "Used when the model responds purely conversationally without needing to call any external tool.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  ]
+}
